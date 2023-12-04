@@ -1,9 +1,8 @@
-# -*- coding: utf-8 -*-
 from dataclasses import dataclass
 from pycities import RowFactoryModelConfig, CityDatabase, dict_factory
 
 
-# Define our model
+# You can define your own custom model or use existed ones for: tuple, dict, list, sqlite3.Row
 @dataclass(frozen=True)
 class City:
     id: int
@@ -14,15 +13,16 @@ class City:
     latitude: str
 
 
-# Create row factory for our model
-def city_factory(cursor, row) -> City: return City(**dict_factory(cursor, row))
+# Create row factory for your custom model
+def city_factory(cursor, row) -> City:
+    return City(**dict_factory(cursor, row))
 
 
-# Set our row factory config
+# Set your factory config for your custom model
 RowFactoryModelConfig.set(City, city_factory)
 
-# Create new instance with our model. Also, we can use predefined models: tuple, dict, list, sqlite3.Row
-# We can define fields that we want to fetch in SELECT queries.
+# Create new instance with our model.
+# You can define fields that you want to fetch in SELECT queries.
 # All supported fields can be found in `pycities.config.CITY_ALL_FIELDS`
 db = CityDatabase[City](
     fetch_fields=("id", "name", "administrative_name", "country_name", "longitude", "latitude")
