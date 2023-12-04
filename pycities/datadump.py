@@ -3,7 +3,7 @@ import os
 import sqlite3
 from typing import Sequence, Optional, Dict, Union, List
 
-import config
+from . import config
 
 
 def _init_table(conn: sqlite3.Connection, table_name: str, column_types: Dict[str, str]) -> None:

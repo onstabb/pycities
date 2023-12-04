@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 import pytest
 
-import database
-import model
+from pycities import database
+from pycities import model
 
 
 @pytest.fixture(scope="module")

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 import pytest
 
-import config
-import datadownload
+from pycities import config
+from pycities import datadownload
 
 
 @pytest.mark.parametrize(

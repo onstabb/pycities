@@ -3,7 +3,7 @@ from pathlib import Path
 
 
 GEONAMES_URL = "https://download.geonames.org/export/dump/"
-DATA_DIR = Path(__file__).parent.parent / "data"
+DATA_DIR = Path(__file__).parent / "data"
 DEFAULT_DATA_SOURCE = DATA_DIR / "data.db"
 
 COUNTRIES_FILENAME = "countryInfo.txt"

@@ -1,6 +1,6 @@
 import pytest
 
-import utils
+from pycities import utils
 
 
 @pytest.mark.parametrize(

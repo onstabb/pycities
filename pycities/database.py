@@ -6,9 +6,9 @@ from functools import lru_cache
 from os import PathLike
 from typing import Optional, Generic, Union, Type, Tuple, List
 
-import config
-from model import TCityModel, RowFactoryModelConfig
-from utils import calculate_distance
+from . import config
+from .model import TCityModel, RowFactoryModelConfig
+from .utils import calculate_distance
 
 
 class CityDatabase(Generic[TCityModel]):

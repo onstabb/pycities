@@ -2,8 +2,8 @@ import sqlite3
 
 import pytest
 
-import config
-import datadump
+from pycities import config
+from pycities import datadump
 
 
 @pytest.fixture(scope="module")
