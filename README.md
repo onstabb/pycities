@@ -1,20 +1,21 @@
 # Pycities
 
-A lightweight local city database library in Python with multilanguage support. 
-All data used from [geonames.org](https://www.geonames.org/). 
+A lightweight city local database library in Python with multilanguage support. 
+All data is obtained from [geonames.org](https://www.geonames.org/). 
 
-Pure Python with built-in sqlite3 module, no additional requirements.
+Pure Python with built-in **sqlite3** module, no additional requirements.
 
-# Requirements
+## Requirements
 * Python >= 3.7
-* SQLite3 >= 3.3.3
-# Installation
+* SQLite3 >= 3.3.3 (Versions below 3.3.3 are unstable)
+
+## Installation
 
 ```
 pip install pycities
 ```
 
-# Usage
+## Usage
 
 ```python
 # -*- coding: utf-8 -*-
@@ -22,7 +23,7 @@ from dataclasses import dataclass
 from pycities import RowFactoryModelConfig, CityDatabase, dict_factory
 
 
-# Define our model
+# You can define your own custom model or use existed ones for: tuple, dict, list, sqlite3.Row  
 @dataclass(frozen=True)
 class City:
     id: int
@@ -33,16 +34,17 @@ class City:
     latitude: str
 
 
-# Create row factory for our model 
-def city_factory(cursor, row) -> City: return City(**dict_factory(cursor, row))
+# Create row factory for your custom model
+def city_factory(cursor, row) -> City:
+    return City(**dict_factory(cursor, row))
 
 
-# Set our row factory config
+# Set your factory config for your custom model
 RowFactoryModelConfig.set(City, city_factory)
 
-# Create new instance with our model. Also, we can use predefined models: tuple, dict, list, sqlite3.Row
-# We can define fields that we want to fetch in SELECT queries.
-# All supported fields can be found in `pycities.config.CITY_ALL_FIELDS`
+# Create new instance with row model.
+# You can define fields that you want to fetch in SELECT queries. 
+# All supported fields can be found in `pycities.config.CITY_ALL_FIELDS`.
 db = CityDatabase[City](
     fetch_fields=("id", "name", "administrative_name", "country_name", "longitude", "latitude")
 )
@@ -69,4 +71,9 @@ for city in db.get_nearest(latitude=43.313, longitude=-31.123, limit=3):
 
 db.close()
 
+
 ```
+
+## Contributing 
+Feel free to contribute to this project. You can suggest your changes, fixes, upgrades and etc. Contact me by
+[kliuchkovladyslav@gmail.com](mailto:kliuchkovladyslav@gmail.com).
