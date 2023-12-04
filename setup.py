@@ -11,6 +11,7 @@ setup(
     long_description_content_type="text/markdown",
     author="Vladyslav Kliuchko",
     author_email="kliuchkovladyslav@gmail.com",
+    url="https://github.com/onstabb/pycities",
     license="MIT",
     classifiers=[
         "Intended Audience :: Developers",
@@ -23,7 +24,7 @@ setup(
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
         "Programming Language :: Python :: 3.12",
-        "Operating System :: OS Independent"
+        "Operating System :: OS Independent",
         "Topic :: Software Development :: Libraries :: Python Modules",
     ],
     packages=find_packages(exclude=("tests", "examples")),
