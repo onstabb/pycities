@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import sqlite3
 from dataclasses import dataclass
 from sqlite3 import Cursor, Row

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from dataclasses import dataclass
 from pycities import RowFactoryModelConfig, CityDatabase, dict_factory
 

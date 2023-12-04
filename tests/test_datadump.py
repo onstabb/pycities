@@ -7,8 +7,8 @@ import datadump
 
 
 @pytest.fixture(scope="module")
-def sqlite_conn(temp_data_path, data_dir):
-    conn = sqlite3.connect(data_dir / "geonames_test.db")
+def sqlite_conn(temp_data_path):
+    conn = sqlite3.connect(temp_data_path / "geonames_test.db")
     yield conn
     conn.close()
 

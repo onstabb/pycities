@@ -1,7 +1,7 @@
 # Pycities
 
 A lightweight local city database library in Python with multilanguage support. 
-All data used from geonames.org. 
+All data used from [geonames.org](https://www.geonames.org/). 
 
 Pure Python with built-in sqlite3 module, no additional requirements.
 

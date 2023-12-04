@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import os
 import sqlite3
 from typing import Sequence, Optional, Dict, Union, List
