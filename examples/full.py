@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from dataclasses import dataclass
 from pycities import RowFactoryModelConfig, CityDatabase, dict_factory
 
@@ -34,6 +35,8 @@ print(db.supported_languages)
 
 print(db.search(query="Wroclaw", lang="pl", limit=1))
 # >>> [City(id=3081368, name='Wrocław', administrative_name='Województwo dolnośląskie', country_name='Polska', longitude=17.03333, latitude=51.1)]
+print(db.search(query="Breslau", lang="en", limit=1))
+# >>> [City(id=3081368, name='Wroclaw', administrative_name='Lower Silesian Voivodeship', country_name='Poland', longitude=17.03333, latitude=51.1)]
 
 for lang in db.supported_languages:
     print(db.get_city(5128581, lang=lang))

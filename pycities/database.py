@@ -74,6 +74,16 @@ class CityDatabase(Generic[TCityModel]):
         return template_query.format(",".join(fields)).format(f"_{lang}" if lang else "")
 
     def search(self, query: str, *, lang: str = "", limit: int = -1) -> List[TCityModel]:
+        """
+        Searches for cities based on a given query string.
+        The search is carried out by the FTS5 module using the “alternate_names” column.
+
+        :param query: Input query string
+        :param lang: Names in particular language for some columns
+        :param limit: Limit of the result
+        :return: List of suitable cities
+        """
+
         select_query = self._prepare_select_template(self.fetch_fields, config.FTS_CITY_SEARCH_SELECT, lang)
         result = self.cursor.execute(select_query, (query, limit))
         return result.fetchall()
@@ -87,11 +97,11 @@ class CityDatabase(Generic[TCityModel]):
         """
         Gets nearest cities by given point with latitude and longitude
 
-        :param latitude: latitude of the point
-        :param longitude: longitude of the point
-        :param lang: names in particular language for some columns
-        :param limit: limit of the result
-        :return: list of nearest cities to the given point
+        :param latitude: Latitude of the point
+        :param longitude: Longitude of the point
+        :param lang: Names in particular language for some columns
+        :param limit: Limit of the result
+        :return: List of nearest cities to the given point
         """
 
         query = self._prepare_select_template(self.fetch_fields, config.CITY_SELECT_NEAREST, lang)
