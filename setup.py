@@ -5,7 +5,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="pycities",
-    version="0.1.5",
+    version="0.2.0",
     description="A lightweight local city database library in Python with multilanguage support.",
     long_description=Path("README.md").read_text(encoding="utf-8"),
     long_description_content_type="text/markdown",

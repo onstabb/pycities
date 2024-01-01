@@ -2,6 +2,7 @@
 import logging
 import sqlite3
 import sys
+import threading
 from functools import lru_cache
 from os import PathLike
 from typing import Optional, Generic, Union, Type, Tuple, List
@@ -13,11 +14,13 @@ from .utils import calculate_distance
 
 class CityDatabase(Generic[TCityModel]):
 
-    def __init__(self, fetch_fields: Optional[Tuple[str, ...]] = None) -> None:
+    def __init__(self, fetch_fields: Optional[Tuple[str, ...]] = None, use_lock: bool = True) -> None:
         self.__conn: Optional[sqlite3.Connection] = None
         self.__cursor: Optional[sqlite3.Cursor] = None
         self._log = logging.getLogger(self.__class__.__name__)
         self.fetch_fields = fetch_fields or ("*", )
+        self._lock = threading.Lock()
+        self.use_lock = use_lock
 
     def connect(self, datasource: Union[str, PathLike] = config.DEFAULT_DATA_SOURCE, **params) -> 'CityDatabase':
         """Creates a new connection to the datasource"""
@@ -37,7 +40,6 @@ class CityDatabase(Generic[TCityModel]):
     @property
     def supported_languages(self) -> Tuple[str, ...]:
         """Gets a sequence of languages available in the database"""
-
         result = self.conn.execute(
             "SELECT SUBSTR(name, 6, 2) as languages FROM PRAGMA_TABLE_INFO(?) WHERE name LIKE 'name_' || '%'",
             (config.CITY_TABLE_NAME,)
@@ -59,6 +61,19 @@ class CityDatabase(Generic[TCityModel]):
         if not self.__conn:
             raise RuntimeError("There is no connection to the datasource")
         return self.__conn
+
+    def __fetch_all(
+            self,
+            conn_or_cursor: Union[sqlite3.Cursor, sqlite3.Connection],
+            sql_query: str,
+            params: tuple
+    ) -> list:
+        if not self.use_lock:
+            return conn_or_cursor.execute(sql_query, params).fetchall()
+
+        with self._lock:
+            result: sqlite3.Cursor = conn_or_cursor.execute(sql_query, params)
+            return result.fetchall()
 
     @property
     def cursor(self) -> sqlite3.Cursor:
@@ -85,13 +100,13 @@ class CityDatabase(Generic[TCityModel]):
         """
 
         select_query = self._prepare_select_template(self.fetch_fields, config.FTS_CITY_SEARCH_SELECT, lang)
-        result = self.cursor.execute(select_query, (query, limit))
-        return result.fetchall()
+        result = self.__fetch_all(self.cursor, select_query, (query, limit))
+        return result
 
     def get_city(self, geonames_id: int, *, lang: str = "") -> Optional[TCityModel]:
         select_query = self._prepare_select_template(self.fetch_fields, config.CITY_SELECT_BY_ID, lang)
-        result = self.cursor.execute(select_query, (geonames_id,))
-        return result.fetchone()
+        result = self.__fetch_all(self.cursor, select_query, (geonames_id,))
+        return result[0]
 
     def get_nearest(self, latitude: float, longitude: float, *, lang: str = "", limit: int = 1) -> List[TCityModel]:
         """
@@ -105,8 +120,8 @@ class CityDatabase(Generic[TCityModel]):
         """
 
         query = self._prepare_select_template(self.fetch_fields, config.CITY_SELECT_NEAREST, lang)
-        result = self.cursor.execute(query, (latitude, longitude, limit))
-        return result.fetchall()
+        result = self.__fetch_all(self.cursor, query, (latitude, longitude, limit))
+        return result
 
     def close(self) -> None:
         self.cursor.close()
